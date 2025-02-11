@@ -4,17 +4,26 @@ import random
 WIDTH = 1000
 HEIGHT = 750
 TITLE = "rycling marathon"
-non_r=["battery","bottle","chips","plastic bag"]
+non_r=["battery","bottle","chipsimg","plastic bag"]
 actors = []
 levels = 5
 cur_level = 1
+animations = []
+gameover = False
 
-def draw():
-    screen.blit("eco backround",(0,0))
-    for actor in actors:
-        actor.draw()
-def create_actors():
-    global actors
+def draw():   
+    if gameover == True:
+        screen.fill('black')
+    else:
+        screen.blit("eco backround",(0,0))
+        for actor in actors:
+            actor.draw() 
+def game_over():
+    global gameover
+    gameover = True
+
+def create_actors():  
+    global actors, animations
     items = ["paper"]
     for i in range(cur_level):
         item = random.choice(non_r)
@@ -22,7 +31,18 @@ def create_actors():
     for item in items:
         actor = Actor(item) 
         actors.append(actor)
-        
+    num_of_gaps = cur_level + 2
+    gap_size = WIDTH/num_of_gaps
+    actor_number = 1 
+    for actor in actors:
+       actor.pos = actor_number * gap_size, 50
+       actor_number = actor_number + 1
+    
+    for actor in actors:
+        animation = animate(actor,y = 750,duration = 5, on_finished = game_over )
+        animations.append(animation)
+
+
 def update():
     pass 
 create_actors()
